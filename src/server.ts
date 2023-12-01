@@ -1,21 +1,19 @@
-require("express-async-errors")
-
-
 import express, {Request, Response, NextFunction, json, response} from "express";
+import "express-async-errors"
+import cors from 'cors'
+
 import { routes } from "./routes";
 import { AppError } from "./utils/AppError";
 
 
 const app =  express()
-app.use(json())
+app.use(express.json())
+app.use(cors())
 app.use(routes)
 
 
 
-type ErrorProps = {
-    status? : string 
-    message? : string
-}
+
 
 
 app.use((error : Error, request : Request, response : Response, next : NextFunction) => {

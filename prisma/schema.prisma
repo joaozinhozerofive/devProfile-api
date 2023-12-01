@@ -1,0 +1,128 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User{
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  password String 
+  ocupation String?
+  about String?
+  Created_at DateTime? @default(now())
+  Updated_at DateTime?  @default(now())
+
+
+
+  @@map("users")
+
+  contacts Contact[]
+  technologies Technologie[]
+  projects Project[]
+  works Work[]
+
+}
+
+
+model Contact{
+  id Int @id @default(autoincrement())
+  user_id Int 
+  whatsapp String?
+  linkedin String?
+  github String?
+  email String
+  Created_at DateTime? @default(now())
+  Updated_at DateTime?  @default(now())
+
+
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("contacts")
+
+
+}
+
+
+model Technologie{
+  id Int @id @default(autoincrement())
+  user_id Int
+  name String
+  Created_at DateTime? @default(now())
+  Updated_at DateTime?  @default(now())
+  
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  
+
+  @@map("technologies")
+
+}
+
+
+model Project{
+  id Int @id @default(autoincrement())
+  user_id Int
+  name String
+  img String?
+  description String
+  link String 
+
+  Created_at DateTime? @default(now())
+  Updated_at DateTime?  @default(now())
+  
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade )
+
+  @@map("projects")
+
+  technologies ProjectTechnologie[]
+
+}
+
+model ProjectTechnologie{
+  id Int @id @default(autoincrement())
+  project_id Int
+  name String
+
+  Created_at DateTime? @default(now())
+  Updated_at DateTime?  @default(now())
+
+  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+
+
+   @@map("projectsTechnologies")
+
+}
+
+model Work{
+  id Int @id @default(autoincrement())
+  user_id Int
+  companyName String
+  city String
+  FU String  
+  startDate String
+  endDate String
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+
+  @@map("works")
+
+}
+
+
+
+//Para remover as dependencias entre as tabelas, os seguintes comando devem ser excutados na query do SGBD:
+
+
+
+
+
+

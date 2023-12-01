@@ -1,13 +1,12 @@
 import { Router } from "express";
-import { testandoRoutes } from "./testando.routes";
+import { usersRoutes } from ".//users.routes";
 
 
 const routes = Router();
 
 
-routes.use("/testando", testandoRoutes)
+routes.use("/users", usersRoutes)
 
 
 
-
-export  {routes}
+export {routes}
