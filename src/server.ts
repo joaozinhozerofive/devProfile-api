@@ -1,6 +1,7 @@
 import express, {Request, Response, NextFunction, json, response} from "express";
 import "express-async-errors"
 import cors from 'cors'
+import path from "path"
 
 import { routes } from "./routes";
 import { AppError } from "./utils/AppError";
@@ -10,6 +11,7 @@ const app =  express()
 app.use(express.json())
 app.use(cors())
 app.use(routes)
+app.use("/files", express.static(path.resolve(__dirname, '..', "TMP")))
 
 
 
@@ -23,7 +25,7 @@ app.use((error : Error, request : Request, response : Response, next : NextFunct
             message: error.message
         })
     }
-    console.log(Error)
+    console.log(error)
     
     return response.status(500).json({
         status : "error",
@@ -33,7 +35,7 @@ app.use((error : Error, request : Request, response : Response, next : NextFunct
 })
 
 
-const PORT = 3030
+const PORT = process.env.PORT
 
 app.listen(PORT, () => {
     console.log("Server is running on PORT:" + PORT )
