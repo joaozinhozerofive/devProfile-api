@@ -7,5 +7,4 @@ const authSecrets = {
         expiresIn: "7d"
     }
 };
-
 exports.authSecrets = authSecrets;

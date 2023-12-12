@@ -2,7 +2,7 @@ import multer from 'multer'
 import crypto from 'crypto'
 import path from 'path'
 
-const TMP_FOLDER : string = path.resolve(__dirname, "..", "..", "tmp") 
+const TMP_FOLDER  = path.resolve(__dirname, "..", "..", "tmp") 
 
  const uploadConfig = {
     storage : multer.diskStorage({
