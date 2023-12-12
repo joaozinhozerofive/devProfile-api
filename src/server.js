@@ -13,7 +13,7 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use(routes_1.routes);
-app.use("/files", express_1.default.static(path_1.default.resolve(__dirname, '..', "tmp")));
+app.use("/files", express_1.default.static(path_1.default.resolve(__dirname, '..', "TMP")));
 app.use((error, request, response, next) => {
     if (error instanceof AppError_1.AppError) {
         return response.status(error.statusCode).json({

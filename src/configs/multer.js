@@ -7,7 +7,7 @@ exports.uploadConfig = void 0;
 const multer_1 = __importDefault(require("multer"));
 const crypto_1 = __importDefault(require("crypto"));
 const path_1 = __importDefault(require("path"));
-const TMP_FOLDER = path_1.default.resolve(__dirname, "..", "..", "tmp");
+const TMP_FOLDER = path_1.default.resolve(__dirname, "..", "..", "TMP");
 const uploadConfig = {
     storage: multer_1.default.diskStorage({
         destination: TMP_FOLDER,
