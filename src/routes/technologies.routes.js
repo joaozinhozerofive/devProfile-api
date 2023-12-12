@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.technologiesRoutes = void 0;
+const express_1 = require("express");
+const TechnologiesController_1 = require("../Controllers/TechnologiesController");
+const ensureAuthenticated_1 = require("../middleware/ensureAuthenticated");
+const technologiesRoutes = (0, express_1.Router)();
+exports.technologiesRoutes = technologiesRoutes;
+const technologiesController = new TechnologiesController_1.TechnologiesController();
+technologiesRoutes.put("/", ensureAuthenticated_1.ensureAuthenticated, technologiesController.update);
+technologiesRoutes.get("/:user_id", technologiesController.show);

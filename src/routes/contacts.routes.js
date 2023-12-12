@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.contactsRoutes = void 0;
+const express_1 = require("express");
+const ContactsController_1 = require("../Controllers/ContactsController");
+const ensureAuthenticated_1 = require("../middleware/ensureAuthenticated");
+const contactsRoutes = (0, express_1.Router)();
+exports.contactsRoutes = contactsRoutes;
+const contactsController = new ContactsController_1.ContactsController();
+contactsRoutes.put("/", ensureAuthenticated_1.ensureAuthenticated, contactsController.update);
+contactsRoutes.get("/:user_id", contactsController.show);
