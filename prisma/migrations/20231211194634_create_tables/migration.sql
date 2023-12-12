@@ -4,7 +4,8 @@ CREATE TABLE "users" (
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "ocupation" TEXT NOT NULL,
+    "ocupation" TEXT,
+    "img" TEXT,
     "about" TEXT,
     "Created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "Updated_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
@@ -71,6 +72,7 @@ CREATE TABLE "works" (
     "FU" TEXT NOT NULL,
     "startDate" TEXT NOT NULL,
     "endDate" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
 
     CONSTRAINT "works_pkey" PRIMARY KEY ("id")
 );

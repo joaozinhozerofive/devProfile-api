@@ -1,11 +1,10 @@
 import { Response, Request } from "express";
 import { AppError } from "../utils/AppError";
 import {prisma} from '../prisma/index'
-import { User } from "@prisma/client";
 import { compare } from 'bcryptjs'
-import { UserProps } from "./UsersController";
 import {sign, verify} from 'jsonwebtoken'
 import { authSecrets } from "../configs/auth";
+import { UserProps } from "./UsersController";
 
 
 interface PayloadProps {
@@ -13,14 +12,17 @@ interface PayloadProps {
 }
 
 
+
+
+
 export class SessionsController{
     async create(request : Request, response : Response){
         const {email, password} : UserProps = request.body; 
         
-        const user : User | null = await prisma.user.findFirst({
+        const user = await prisma.user.findFirst({
             where : {
                 email : email
-            }
+            }, 
         });
 
 

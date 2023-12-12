@@ -18,7 +18,7 @@ export class ContactsController{
 
         const user_id : number = request.user.id;
 
-        if(!email || !github  || !linkedin || !whatsapp){
+        if(!email || !github  || !linkedin || ! whatsapp ){
             throw new AppError("Por favor, informe todas as opções de contato")
         }
 
@@ -73,31 +73,32 @@ export class ContactsController{
      async show(request: Request, response:Response){
 
         try{
-            const {user_id} = request.params as {user_id : string}
 
-            const user = await prisma.user.findFirst({
-                where : {
-                    id : Number(user_id)
-                }
-            })
+         const {user_id} = request.params as {user_id : string}
 
-
-            if(!user){
-                throw new AppError("Usuário não encontrado")
-            }
+         const user = await prisma.user.findFirst({
+             where : {
+                 id : Number(user_id)
+             }
+         })
 
 
+         if(!user){
+             throw new AppError("Usuário não encontrado")
+         }
 
-            const userContacts = await prisma.contact.findFirst({
-                where : {
-                    user_id : Number(user_id)
-                }, 
-            })
 
-    
-            return response.json({
-                userContacts
-            })
+         const userContacts = await prisma.contact.findFirst({
+             where : {
+                 user_id : user.id
+             }, 
+         })
+
+         if(!userContacts){
+             throw new AppError("Não foi possível encontrar contatos para este usuário.")
+         }
+
+            return response.json(userContacts)
 
 
         }catch{

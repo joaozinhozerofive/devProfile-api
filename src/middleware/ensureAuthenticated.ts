@@ -13,9 +13,10 @@ export function ensureAuthenticated(request : Request, response : Response, next
     const authHeader = request.headers.authorization
     
     
-    if(!authHeader){
+  if(!authHeader){
         throw new AppError("JWT token não informado", 401); 
     }
+
     const [ , token] = authHeader.split(" ")
 
     try{

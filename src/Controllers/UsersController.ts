@@ -5,12 +5,13 @@ import { compare, hash } from 'bcryptjs'
 
 
 export interface UserProps{
-    name :  string
-    email :  string 
-    old_password : string
-    password: string
-    ocupation : string
-    about : string
+    id? : number
+    name? :  string
+    email? :  string 
+    old_password? : string
+    password?: string
+    ocupation? : string
+    about? : string
 }
 
 export class UsersController{
@@ -23,7 +24,7 @@ export class UsersController{
 
 
 
-        const checkUserExists = await prisma.user.findFirst({
+        const user = await prisma.user.findFirst({
             where: { 
                 email : email
             }, 
@@ -36,7 +37,7 @@ export class UsersController{
             throw new AppError("Por favor, insira todos os dados.")
         }
 
-        if(checkUserExists){
+        if(user){
             throw new AppError("Este email já está cadastrado")
         }
 
@@ -68,6 +69,7 @@ export class UsersController{
     async update(request :Request, response :Response){
         const {name, email, password, old_password, ocupation, about} : UserProps = request.body; 
         const  user_id : number = request.user.id 
+        const img = request.file?.filename;
         
 
 
@@ -78,15 +80,21 @@ export class UsersController{
           }
         });
 
+        user.name = name ?? user.name;
+        user.email =  email ?? user.email,
+        user.about = about ?? user.about,
+        user.ocupation = ocupation ?? user.ocupation 
+        user.img = img ?? user.img
+        user.Updated_at = new Date()
        
-        
         const checkEmailExists = await prisma.user.findFirst({
             where: {
-                email: email
+                email: user.email
             }
         })
 
 
+        
 
         if(checkEmailExists && checkEmailExists.id !== user.id  ){
             throw new AppError("Este e-mail já está em uso")
@@ -107,11 +115,7 @@ export class UsersController{
 
         }
 
-        user.name = name ?? user.name;
-        user.email =  email ?? user.email,
-        user.about = about ?? user.about,
-        user.ocupation = ocupation ?? user.ocupation 
-        user.Updated_at = new Date()
+        
 
 
          
@@ -146,20 +150,24 @@ export class UsersController{
         const users = await prisma.user.findMany({
                 where: {
                     name:{
-                        contains : name?.toLowerCase()
+                        contains : name, 
+                        mode : "insensitive"
                     }
-                }, 
-                select:{
+                },
+                select:{ 
+                    id : true, 
                     name : true, 
                     ocupation : true, 
-                    about : true
-                }
+                    about : true,
+                    img : true
+                }, 
+                
             })
 
 
-        return response.json({
-            users
-        })
+        return response.json(users)
+            
+        
 
         }catch{
             throw new AppError("Não foi possível obter informações dos usuário")
@@ -186,9 +194,9 @@ export class UsersController{
             throw new AppError("Usário não encontrado")
         }
     
-        return response.json({
-            user
-        });
+        return response.json(user);
+           
+        
 
         }catch{
             throw new AppError("Não foi possível obter informações do usuário")
@@ -202,6 +210,7 @@ export class UsersController{
 
         const  user_id : number = request.user.id 
 
+    try{
 
         const user = await prisma.user.findFirst({
             where: {
@@ -209,28 +218,24 @@ export class UsersController{
             }
           });
 
-
           if(!user){
             throw new AppError("Usuário não encontrado")
           }
-  
-  
           
+            await prisma.user.delete({
+                where : {
+                    id : user.id
+                }
+            })
 
-        try{
-              await prisma.user.delete({
-               where: {
-                 id: user_id
-               }
-        
-            });
+            return response.json("Portfólio excluído com sucesso!")
 
           }catch{
-            throw new AppError("Não foi posível excluir portfólio")
+            throw new AppError("Não foi possível excluir portifólio")
           }
+          
 
     
-        return response.json({message : "Usuário deletado com sucesso."});
       }
 
     }

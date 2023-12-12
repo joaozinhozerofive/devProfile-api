@@ -3,7 +3,9 @@ import { AppError } from "../utils/AppError";
 import {prisma} from '../prisma/index'
 
 interface TechnologiesProps{
-    technologies : string[]
+    technologies : {
+        name : string
+    }[]
 }
 
 
@@ -39,11 +41,12 @@ interface TechnologiesProps{
         technologies.map(async (technologie) => 
             await prisma.technologie.createMany({
                 data: {
-                    name : technologie, 
+                    name : technologie.name, 
                     user_id, 
                     Updated_at : new Date(),
                 }
             })
+            
             )
 
             return response.json({message : "Tecnologias atualizadas com sucesso."})
@@ -72,9 +75,9 @@ interface TechnologiesProps{
         })
 
 
-        return response.json({
-            technologies
-        })
+        return response.json(technologies)
+            
+       
 
         }catch{
             throw new AppError("Não foi possível encontrar tecnologias")

@@ -17,7 +17,7 @@ export class ProjectsController{
 
 
         const {name, description, technologies, link} : ProjectsProps = request.body;
-        const {filename : img} = request.file;
+        const  img = request.file?.filename;
         const  user_id : number = request.user.id 
 
 
@@ -29,7 +29,9 @@ export class ProjectsController{
             throw new AppError("Por favor, insira ao menos uma tecnologia.")
         }
 
+
   try{
+    
         const project  = await prisma.project.create({
             data: {
                 user_id, 
@@ -66,11 +68,9 @@ export class ProjectsController{
 
     async update(request: Request, response:Response){
 
-    
-    
         const {name, description, technologies, link} : ProjectsProps = request.body;
         const {project_id} = request.params as {project_id : string}
-        const {filename : img} = request.file;
+        let  img = request.file?.filename;
         const  user_id : number = request.user.id 
 
         const project = await prisma.project.findFirst({
@@ -111,16 +111,19 @@ export class ProjectsController{
 
     try{    
 
-        technologies.map(async (technologie) => 
-            await prisma.projectTechnologie.createMany({
-                data: {
-                    name : technologie, 
-                    project_id : project.id, 
-                    Updated_at : new Date(),
-                }
-            })
-            )
+       const newTechs =  await Promise.all (
 
+        technologies.map( async technologie =>
+                await prisma.projectTechnologie.create({
+                        data: {
+                            name : technologie, 
+                            project_id : project.id, 
+                            Updated_at : new Date(),
+                        }
+                    })
+
+            )   
+)
 
         project.name = name ?? project.name;
         project.description = description ?? project.description;
@@ -138,7 +141,7 @@ export class ProjectsController{
             }
         })
 
-        return response.json( project.user_id)
+        return response.json(newTechs)
 
     }catch{
         throw new AppError("Não foi possível atualizar o projeto.")
@@ -207,6 +210,50 @@ export class ProjectsController{
      }catch{
         throw new AppError("Não foi possível visualizar este projeto")
      }   
+        
+    }
+
+
+    async delete(request: Request, response:Response){
+
+        const {project_id} = request.params as {project_id : string }
+        const user_id : number = request.user.id
+
+        const user = await prisma.user.findFirst({
+            where : {
+                id : user_id
+            }
+        })
+
+        const project = await prisma.project.findFirst({
+            where : {
+                id : Number(project_id)
+            }
+        })
+
+        if(!project){
+            throw new AppError("Não foi possível encontrar este projeto")
+        }
+
+
+        try{
+            const userIdMatched = user_id === project.user_id
+
+
+            if(!userIdMatched){
+                throw new AppError("Você não pode excluir informações de outro usuário.")
+            }else{
+                await prisma.project.delete({
+                     where: {
+                        id : project.id
+                     }
+                })
+            }
+
+            return response.json({message : "Esse projeto foi excluido com sucesso!"})
+        }catch{
+            throw new AppError('Não foi possível excluir este projeto')
+        }
         
     }
     
