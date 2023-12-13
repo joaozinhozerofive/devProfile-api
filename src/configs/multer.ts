@@ -18,5 +18,6 @@ const TMP_FOLDER  = path.resolve(__dirname, "..", "..", "TMP")
 
 
 export {uploadConfig}
+export {TMP_FOLDER}
 
 

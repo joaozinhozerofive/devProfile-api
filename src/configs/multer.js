@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadConfig = void 0;
+exports.TMP_FOLDER = exports.uploadConfig = void 0;
 const multer_1 = __importDefault(require("multer"));
 const crypto_1 = __importDefault(require("crypto"));
 const path_1 = __importDefault(require("path"));
 const TMP_FOLDER = path_1.default.resolve(__dirname, "..", "..", "TMP");
+exports.TMP_FOLDER = TMP_FOLDER;
 const uploadConfig = {
     storage: multer_1.default.diskStorage({
         destination: TMP_FOLDER,

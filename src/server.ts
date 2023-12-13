@@ -5,13 +5,14 @@ import path from "path"
 
 import { routes } from "./routes";
 import { AppError } from "./utils/AppError";
+import { TMP_FOLDER } from "./configs/multer";
 
 
 const app =  express()
 app.use(express.json())
 app.use(cors())
 app.use(routes)
-app.use("/files", express.static(path.resolve(__dirname, '..', "TMP")))
+app.use("/files", express.static(TMP_FOLDER))
 
 
 
